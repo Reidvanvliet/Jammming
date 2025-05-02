@@ -1,51 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react'
 import './App.css'
+import SearchBar from './SearchBar';
+import SearchResults from './SearchResults';
 
 
 function App() {
-  //const [count, setCount] = useState(0)
+  const [search, setSearch] = useState("");
+  const [songs, setSongs] = useState([]);
+  const [title, setTitle] = useState("Playlist Title");
 
+  const searchSongs = async (search) => {
+    try {
+      const response = await fetch(URL);
+      if(response.ok) {
+        const jsonResponse = await response.json();
+        console.log(jsonResponse);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   return (
     <>
       <header>
         <h1>Jammming</h1>
       </header>
-      <body>
-        <div>
-          <h2>Add Your Favorite Spotify Songs!</h2>
-        </div>
+      
+      <div>
+        <h2>Add Your Favorite Spotify Songs!</h2>
+      </div>
 
-        //probably import this with a searchBar component
-        <div className="search">
-          <img className='searchIcon'/>
-          <select name="params" id="params">
-            <option value="song" selected>Song</option>
-            <option value="genre" selected>Genre</option>
-            <option value="artist" selected>Artist</option>
-            <option value="album" selected>Album</option>
-          </select>
-        </div>
+      <SearchBar setSearch={setSearch} value={search} />
 
-        <div className='results'>
-          //these are added with our searchResults component
-          <img className="albumCover"/>
-          <p>{songname}</p>
-          <p>{artist}</p>
-          <button className="add">+</button>
-        </div>
+      <ul>
+        {jsonResponse.map((searchResult) => {
+          <SearchResults searchResult={searchResult} setSongs={setSongs} />
+        })}
+      </ul>
 
-        <div className="playlist">
-          <h3>{playlistTitle}</h3>
-          <button className="editTitle"><img id="littlePencil"/></button>
-          //these are added with our AddSong component
-          <p>{songname}</p>
-          <p>{artist}</p>
-          <button className="delete">-</button>
-          <button className="saveSpotify">Save to Spotify</button>
-        </div>
-      </body>
+      <div className="playlist">
+        <input className="playlistTitle" onChange={(e) => setTitle(e.target.value)} value ={title}></input>
+        <ul>
+          {songs.map((song) => {
+            <Playlist song={song} id={song.id} />
+          })}
+        </ul>
+      </div>
+      
     </>
   )
 }
