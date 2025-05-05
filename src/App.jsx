@@ -64,30 +64,47 @@ function App() {
   return (
     <>
       <header>
-        <h1>Jammming</h1>
+        <h1>Ja<span>mmm</span>ing</h1>
       </header>
       
-      <div>
-        <h2>Add Your Favorite Spotify Songs!</h2>
+      <div className="banner-container">
+        <div className="main-banner"> 
+          <h2>Add Your Favorite</h2>
+          <h2>Spotify Songs!</h2>
+          <div className="search-container">
+            <SearchBar setSearch={setSearch} value={search}/>
+          </div>
+        </div>
       </div>
 
-      <SearchBar setSearch={setSearch} value={search}/>
+      <div className="songs-grid">
 
-      <ul>
-        {tests.map((test) => {
-          return <SearchResults result={test} setSongs={setSongs} key={test.id}/>
-        })}
-      </ul>
+        <div className="search-results">
+          <ul>
+            {tests.map((test) => {
+              return <SearchResults result={test} setSongs={setSongs} key={test.id}/>
+            })}
+          </ul>
+        </div>
+        
+        <div className="playlist">
+          <ul>
+            <li className="title">
+              <input className="playlist-title" onChange={(e) => setTitle(e.target.value)} value ={title}></input>
+            </li>
+            {songs.map((song, index) => {
+              song.playlistId = index
+              return <Playlist song={song} id={song.id} setSongs={setSongs} key={index} />
+            })}
+            <li className="save">
+              <button>save to spotify</button>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
       
-      <div className="playlist">
-        <input className="playlistTitle" onChange={(e) => setTitle(e.target.value)} value ={title}></input>
-        <ul>
-          {songs.map((song, index) => {
-            song.playlistId = index
-            return <Playlist song={song} id={song.id} setSongs={setSongs} key={index} />
-          })}
-        </ul>
-      </div>
+      
 
     </>
   )

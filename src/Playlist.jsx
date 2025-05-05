@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 function Playlist ({song, setSongs}) {
 
     return (
-        <li>
+        <li className='tracks'>
             <img className="albumCover" src={song.albumCover}/>
-            <p>{song.songName}</p>
-            <p>{song.artist}</p>
+            <div className="song-info">
+                <p className='track'>{song.songName}</p>
+                <p className='artist'>{song.artist}</p>
+            </div>
             <button className="delete" onClick={(e) => setSongs((prev) => prev.filter((e) => e.playlistId !== song.playlistId))}>-</button>
         </li>
     )
