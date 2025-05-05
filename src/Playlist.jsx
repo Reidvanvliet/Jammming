@@ -7,7 +7,9 @@ function Playlist ({song, setSongs}) {
             <img className="albumCover" src={song.albumCover}/>
             <p>{song.songName}</p>
             <p>{song.artist}</p>
-            <button className="add" onClick={setSongs((prev) => prev.filter((e) => e.id !== song.id))}>-</button>
+            <button className="delete" onClick={(e) => setSongs((prev) => prev.filter((e) => e.playlistId !== song.playlistId))}>-</button>
         </li>
     )
 }
+
+export default Playlist;

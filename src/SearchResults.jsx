@@ -1,22 +1,13 @@
 import React, { useState } from 'react';
 
-function SearchResults ({searchResult, setSongs}) {
-    const song = {
-        albumCover: searchResult.albumCover,
-        songName: searchResult.songName,
-        artist: searchResult.Artist,
-        id: searchResult.id
-    }
-   
+function SearchResults ({result, setSongs}) {
 
     return (
-        <li>
-            <div className='result' id={song.id}>
-                <img className="albumCover" src={song.albumCover}/>
-                <p>{song.songName}</p>
-                <p>{song.artist}</p>
-                <button className="add" onClick={setSongs((prev) => [song, ...prev])}>+</button>
-            </div>
+        <li className='result'>
+                <img className="albumCover" src={result.albumCover}/>
+                <p>{result.songName}</p>
+                <p>{result.artist}</p>
+                <button className="add" onClick={(e) => setSongs((prev) => [result, ...prev])}>+</button>
         </li>
     )
 }
