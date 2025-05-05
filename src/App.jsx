@@ -97,7 +97,7 @@ function App() {
               return <Playlist song={song} id={song.id} setSongs={setSongs} key={index} />
             })}
             <li className="save">
-              <button>save to spotify</button>
+              <button>Save to Spotify</button>
             </li>
           </ul>
         </div>

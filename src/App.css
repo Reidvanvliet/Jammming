@@ -76,6 +76,7 @@ header span {
   border: 2px solid black;
   font-size: 1.2rem;
   font-weight: bold;
+  text-align: center;
 }
 
 .songs-grid {
@@ -93,7 +94,6 @@ header span {
   border-radius: 30px;
   min-height: 800px;
   color: white;
-  padding-top: 50px;
 }
 
 .playlist {
@@ -104,17 +104,16 @@ header span {
   border-radius: 30px;
   min-height: 800px;
   color: white;
-  padding-top: 50px;
-}
-
-.search-results ul {
-  padding: 0 20px 0 20px;
-  width: 100%;
+  padding-top: 30px;
 }
 
 .playlist ul {
   padding: 0 20px 0 20px;
   width: 100%;
+}
+
+.search-results ul {
+  width: 80%
 }
 
 .title {
@@ -138,6 +137,7 @@ header span {
   display: flex;
   padding: 30px;
   justify-content: space-between;
+  border-bottom: 1px solid white;
 }
 
 .song-info {
