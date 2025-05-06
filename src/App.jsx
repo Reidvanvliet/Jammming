@@ -4,15 +4,41 @@ import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
 import Playlist from './Playlist';
 
+const client_id = "2fac4d8b00b74fa7912463fa0d1f5b9f";
+const client_secret = "da6d7503439f4bd58dcc074700cbf86a";
+
 
 function App() {
   const [search, setSearch] = useState("");
   const [songs, setSongs] = useState([]);
   const [title, setTitle] = useState("Playlist Title");
 
-  /*const searchSongs = async (search) => {
+  const getAccessToken = async () => {
     try {
-      const response = await fetch(URL);
+      const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        body: new URLSearchParams({
+          'grant_type': 'client_credentials',
+          'client_id': client_id,
+          'client_secret': client_secret
+        })
+      });
+      if(response.ok) {
+        const jsonResponse = await response.json();
+        return jsonResponse
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getSearchData = async (authentication) => {
+    try {
+      const response = await fetch('https://api.spotify.com/v1/tracks/51YZAJhOwIC5Gg3jMbAmhZ', {
+        headers: {
+          'Authorization': `Bearer ${authentication.access_token}`
+        }
+      });
       if(response.ok) {
         const jsonResponse = await response.json();
         console.log(jsonResponse);
@@ -20,9 +46,9 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }*/
-
+  }
   
+  getAccessToken().then((value) => getSearchData(value)).then();
 
 
   const jsonResponses = [
