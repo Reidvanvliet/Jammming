@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SearchResults ({result, setSongs}) {
+function SearchResults ({result, setPlaylistSongs, generateUniqueId}) {
 
     return (
         <li className='tracks'>
@@ -9,7 +9,7 @@ function SearchResults ({result, setSongs}) {
                     <p className='track'>{result.songName}</p>
                     <p className='artist'>{result.artist}</p>
                 </div>
-            <button className="add" onClick={(e) => setSongs((prev) => [result, ...prev])}>+</button>
+            <button className="add" onClick={(e) => setPlaylistSongs((prev) => [{...result, playlistId: generateUniqueId()}, ...prev])}>+</button>
         </li>
     )
 }

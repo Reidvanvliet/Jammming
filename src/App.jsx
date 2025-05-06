@@ -11,7 +11,16 @@ const client_secret = "da6d7503439f4bd58dcc074700cbf86a";
 function App() {
   const [search, setSearch] = useState("");
   const [songs, setSongs] = useState([]);
+  const [playlistSongs, setPlaylistSongs] = useState([]);
   const [title, setTitle] = useState("Playlist Title");
+
+  let uniqueIdCounter = 0;
+
+  const generateUniqueId = () => {
+      const uniqueId = uniqueIdCounter;
+      uniqueIdCounter++;
+      return uniqueId;
+  }
 
   const getAccessToken = async () => {
     try {
@@ -34,58 +43,40 @@ function App() {
 
   const getSearchData = async (authentication) => {
     try {
-      const response = await fetch('https://api.spotify.com/v1/tracks/51YZAJhOwIC5Gg3jMbAmhZ', {
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${search}&type=track`, {
         headers: {
           'Authorization': `Bearer ${authentication.access_token}`
         }
       });
       if(response.ok) {
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
+        return jsonResponse
       }
     } catch (error) {
       console.log(error);
     }
   }
   
-  getAccessToken().then((value) => getSearchData(value)).then();
-
-
-  const jsonResponses = [
-    {
-      albumCover: "./images/sampleAlbumCover.jpg",
-      songName: "I love men",
-      artist: "Abba",
-      id: 1
-    },
-    {
-      albumCover: "./images/sampleAlbumCover.jpg",
-      songName: "Super Heavy Death Metal",
-      artist: "Asshole Rippers",
-      id: 2
-    },
-    {
-      albumCover: "./images/sampleAlbumCover.jpg",
-      songName: "Techno Beats",
-      artist: "Me in My Basement",
-      id: 3
+  useEffect(() => {
+    if (search) {
+      getAccessToken().then((accessToken) => getSearchData(accessToken)).then((searchData) => handleData(searchData.tracks.items))
     }
-  ]
+  }
+  ,[search]);
+
 
   function handleData (results) {
     let songs = [];
     results.map((result) => {
       songs.push({
-          albumCover: result.albumCover,
-          songName: result.songName,
-          artist: result.artist,
+          albumCover: result.album.images[2].url,
+          songName: result.name,
+          artist: result.artists[0].name,
           id: result.id
       })
     })
-    return songs;
+    setSongs(songs);
   }
-
-  const tests = handleData(jsonResponses);
 
   return (
     <>
@@ -107,8 +98,8 @@ function App() {
 
         <div className="search-results">
           <ul>
-            {tests.map((test) => {
-              return <SearchResults result={test} setSongs={setSongs} key={test.id}/>
+            {songs.map((song) => {
+              return <SearchResults result={song} setPlaylistSongs={setPlaylistSongs} key={song.id} generateUniqueId={generateUniqueId} />
             })}
           </ul>
         </div>
@@ -118,20 +109,19 @@ function App() {
             <li className="title">
               <input className="playlist-title" onChange={(e) => setTitle(e.target.value)} value ={title}></input>
             </li>
-            {songs.map((song, index) => {
-              song.playlistId = index
-              return <Playlist song={song} id={song.id} setSongs={setSongs} key={index} />
+            {playlistSongs.map((playlistSong) => {
+              playlistSong.playlistId = generateUniqueId();
+              return <Playlist playlistSong={playlistSong} id={playlistSong.id} setPlaylistSongs={setPlaylistSongs} key={playlistSong.playlistId} />
             })}
             <li className="save">
               <button>Save to Spotify</button>
             </li>
           </ul>
         </div>
-        
+        <div className="footer"></div>
       </div>
-      
-      
 
+      
     </>
   )
 }

@@ -83,6 +83,7 @@ header span {
   display: grid;
   grid:  auto / 1.3fr 1fr;
   grid-gap: 30px;
+  height: 500px;
   margin:  0 30px 30px 30px;
 }
 
@@ -94,6 +95,11 @@ header span {
   border-radius: 30px;
   min-height: 800px;
   color: white;
+  overflow: auto;
+}
+
+.search-results::-webkit-scrollbar {
+  width: 1px;
 }
 
 .playlist {
@@ -105,6 +111,11 @@ header span {
   min-height: 800px;
   color: white;
   padding-top: 30px;
+  overflow: auto;
+}
+
+.playlist::-webkit-scrollbar {
+  width: 1px;
 }
 
 .playlist ul {
@@ -182,4 +193,8 @@ header span {
   border: 3px solid rgb(40, 109, 0);
   background-color: rgb(255, 205, 149);
   margin: 20px;
+}
+
+.footer {
+  height: 10px;
 }
