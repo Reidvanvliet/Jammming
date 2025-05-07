@@ -1,5 +1,6 @@
 html {
-  font-family: "Roboto", 'Times New Roman', Times, serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  letter-spacing: 3px;
   background-image: url(../images/306.jpg);
   background-size: cover;
 }
@@ -10,21 +11,43 @@ header {
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 50px;
+  height: 70px;
   z-index: 3;
-  background-color: rgb(255, 199, 45);
+  background-color: rgb(255, 166, 0);
   border-bottom: 2px solid black;
 }
 
 header h1 {
   font-family: "Permanent Marker";
-  font-size: 40px;
+  font-size: 50px;
   font-weight: bold;
-  letter-spacing: 1px;
 }
 
 header span {
   color: rgba(90, 138, 0, 0.74);
+}
+
+.login {
+  position: absolute;
+  margin-right: 40px;
+  right: 0;
+}
+
+.login button {
+  height: 40px;
+  width: 120px;
+  border-radius: 10px;
+  border: 2px solid black;
+  background-color: rgba(255, 205, 149);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.login h2 {
+  font-family:'Times New Roman', Times, serif;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  font-weight: bold;
 }
 
 .banner-container {
@@ -49,8 +72,7 @@ header span {
   font-weight: bold;
   text-align: center;
   width: 100%;
-  color: rgb(255, 199, 45);
-  letter-spacing: 2px;
+  color: rgb(255, 166, 0);
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
@@ -72,10 +94,9 @@ header span {
   height: 45px;
   margin: 10px;
   border-radius: 10px;
-  background-color: rgb(98, 173, 0);
+  background-color: rgb(255, 193, 122);
   border: 2px solid black;
   font-size: 1.2rem;
-  font-weight: bold;
   text-align: center;
 }
 
@@ -135,18 +156,19 @@ header span {
 .playlist-title {
   text-align: center;
   height: 35px;
-  width: 80%;
+  width: 90%;
   font-size: 1.25rem;
   font-weight: bold;
-  letter-spacing: 1px;
   border-radius: 8px;
-  border: 3px solid rgb(40, 109, 0);
-  background-color: rgb(255, 205, 149);
+  border: none;
+  color: #b4b4b4;
+  background-color: rgb(255, 255, 255);
 }
 
 .tracks {
   display: flex;
   padding: 30px;
+  align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid white;
 }
@@ -162,6 +184,7 @@ header span {
 .song-info p {
   width: 100%;
   text-align: center;
+  line-height: 1.5;
 }
 
 .song-info .track {
@@ -171,10 +194,10 @@ header span {
 .tracks button {
   width: 30px;
   height: 30px;
-  background-color: rgba(255, 205, 149);
+  background-color: rgb(255, 255, 255);
   font-size: 1.25rem;
-  border: 3px solid rgb(40, 109, 0);
-  border-radius: 8px;
+  border: none;
+  border-radius: 20px;
 }
 
 .save {
@@ -183,16 +206,17 @@ header span {
 }
 
 .save button {
+  position: absolute;
   text-align: center;
   height: 45px;
-  width: 60%;
+  width: 20%;
   font-size: 1.25rem;
   font-weight: bold;
-  letter-spacing: 1px;
   border-radius: 8px;
-  border: 3px solid rgb(40, 109, 0);
-  background-color: rgb(255, 205, 149);
+  border: none;
+  background-color: rgb(255, 255, 255);
   margin: 20px;
+  top: 1220px;
 }
 
 .footer {

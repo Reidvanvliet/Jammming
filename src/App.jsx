@@ -3,9 +3,12 @@ import './App.css'
 import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
 import Playlist from './Playlist';
+import Login from './Login';
 
-const client_id = "2fac4d8b00b74fa7912463fa0d1f5b9f";
-const client_secret = "da6d7503439f4bd58dcc074700cbf86a";
+const clientId = "2fac4d8b00b74fa7912463fa0d1f5b9f";
+const clientSecret = "da6d7503439f4bd58dcc074700cbf86a";
+const redirectUri = "http://127.0.0.1:5173"
+const scopes = "playlist-modify-private playlist-modify-public user-read-private"
 
 
 function App() {
@@ -13,7 +16,11 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [playlistSongs, setPlaylistSongs] = useState([]);
   const [title, setTitle] = useState("Playlist Title");
+  const [accessToken, setAccessToken] = useState(null);
+  const [loginAccessToken, setLoginAccessToken] = useState(null);
+  const [userData, setUserData] = useState("");
 
+  
   let uniqueIdCounter = 0;
 
   const generateUniqueId = () => {
@@ -22,30 +29,30 @@ function App() {
       return uniqueId;
   }
 
-  const getAccessToken = async () => {
-    try {
+  const getAccessTokenWithoutLogin = async () => {
+      try {
       const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
-        body: new URLSearchParams({
+              body: new URLSearchParams({
           'grant_type': 'client_credentials',
-          'client_id': client_id,
-          'client_secret': client_secret
-        })
-      });
-      if(response.ok) {
-        const jsonResponse = await response.json();
-        return jsonResponse
+          'client_id': clientId,
+          'client_secret': clientSecret
+              })
+          });
+            if(response.ok) {
+              const jsonResponse = await response.json();
+              setAccessToken(jsonResponse.access_token)
+            }
+      } catch (error) {
+          console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
   }
 
-  const getSearchData = async (authentication) => {
+  const getSearchData = async (accessToken) => {
     try {
       const response = await fetch(`https://api.spotify.com/v1/search?q=${search}&type=track`, {
         headers: {
-          'Authorization': `Bearer ${authentication.access_token}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
       if(response.ok) {
@@ -56,14 +63,19 @@ function App() {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    if(!accessToken) {
+      getAccessTokenWithoutLogin();
+    }
+  },[])
   
   useEffect(() => {
     if (search) {
-      getAccessToken().then((accessToken) => getSearchData(accessToken)).then((searchData) => handleData(searchData.tracks.items))
+      getSearchData(accessToken).then((searchData) => handleData(searchData.tracks.items))
     }
   }
   ,[search]);
-
 
   function handleData (results) {
     let songs = [];
@@ -78,10 +90,90 @@ function App() {
     setSongs(songs);
   }
 
+    const redirectToSpotifyLogin = () => {
+        const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scopes}`;
+        sessionStorage.setItem("playlist", JSON.stringify(playlistSongs));
+        window.location.href = authUrl; 
+      };
+
+    const getAuthCodeFromURL = () => {
+        const params = new URLSearchParams(window.location.search);
+        const authCode = params.get("code");
+
+        if (authCode) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+      
+        return authCode;
+    };
+
+    const getAccessToken = async (authCode) => {
+        if(!authCode) return;
+
+        try {
+            const response = await fetch("https://accounts.spotify.com/api/token", {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded",
+                    "Authorization": "Basic " + btoa(clientId + ":" + clientSecret),
+                },
+                body: new URLSearchParams({
+                    grant_type: "authorization_code",
+                    code: authCode,
+                    redirect_uri: redirectUri,
+                })
+            });
+
+            const data = await response.json();
+
+            if(data.access_token) {
+                setLoginAccessToken(data.access_token);
+
+                alert("✅ You have logged in successfully to your Spotify account!")
+            } else {
+                console.error("❌ Error getting access token:", data);
+                alert("❌ Error getting access token. Please try logging in again.")
+            }
+        } catch (error) {
+            console.error("❌ Error in token request:", error);
+            alert("❌ Network error. Please try again.");
+        }
+    };
+
+    useEffect(() => {
+        const authCode = getAuthCodeFromURL();
+        if (authCode && !loginAccessToken) {
+            getAccessToken(authCode);
+        }
+        if (loginAccessToken) {
+            getUserData(loginAccessToken);
+            const playlist = sessionStorage.getItem("playlist")
+            setPlaylistSongs(JSON.parse(playlist));
+        }
+      }, [loginAccessToken]);
+
+    const getUserData = async (loginAccessToken) => {
+        try {
+            const response = await fetch('https://api.spotify.com/v1/me', {
+            headers: {
+                'Authorization': `Bearer ${loginAccessToken}`
+            }
+              })
+            if(response.ok) {
+                const jsonResponse = await response.json();
+                setUserData(jsonResponse);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
   return (
     <>
       <header>
+        <div className="forStylePoints"></div>
         <h1>Ja<span>mmm</span>ing</h1>
+        <Login redirectToSpotifyLogin={redirectToSpotifyLogin} userData={userData} loginAccessToken={loginAccessToken} />
       </header>
       
       <div className="banner-container">
