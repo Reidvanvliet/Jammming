@@ -29,6 +29,8 @@ function App() {
       return uniqueId;
   }
 
+  //Get access token and search data without having to login
+
   const getAccessTokenWithoutLogin = async () => {
       try {
       const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -89,6 +91,8 @@ function App() {
     })
     setSongs(songs);
   }
+
+  //Login to Spotify account and get user data.
 
     const redirectToSpotifyLogin = () => {
         const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scopes}`;
@@ -168,13 +172,15 @@ function App() {
         }
     }
 
+    //Save playlist to Spotify with tracks
+
     const createNewPlaylist = async () => {
-      if(!title) {
-        return alert("❌ Please set a title!")
-      }
-      
       if(!loginAccessToken) {
         return alert("❌ Please login to Spotify first!")
+      }
+      
+      if(!title) {
+        return alert("❌ Please set a title!")
       }
 
       try {
@@ -224,6 +230,8 @@ function App() {
         console.log(error);
       }
     }
+
+    //Render our application
 
   return (
     <>
