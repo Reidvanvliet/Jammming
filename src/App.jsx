@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import SearchBar from './SearchBar';
-import SearchResults from './SearchResults';
+import Songs from './Songs';
 import Playlist from './Playlist';
 import Login from './Login';
 
@@ -13,7 +13,7 @@ const scopes = "playlist-modify-private playlist-modify-public user-read-private
 
 function App() {
   const [search, setSearch] = useState("");
-  const [songs, setSongs] = useState([]);
+  const [results, setResults] = useState([]);
   const [playlistSongs, setPlaylistSongs] = useState([]);
   const [title, setTitle] = useState("");
   const [accessToken, setAccessToken] = useState(null);
@@ -59,7 +59,8 @@ function App() {
       });
       if(response.ok) {
         const jsonResponse = await response.json();
-        return jsonResponse
+        console.log(jsonResponse);
+        setResults(jsonResponse.tracks.items);
       }
     } catch (error) {
       console.log(error);
@@ -74,23 +75,10 @@ function App() {
   
   useEffect(() => {
     if (search) {
-      getSearchData(accessToken).then((searchData) => handleData(searchData.tracks.items))
+      getSearchData(accessToken)
     }
   }
   ,[search]);
-
-  function handleData (results) {
-    let songs = [];
-    results.map((result) => {
-      songs.push({
-          albumCover: result.album.images[2].url,
-          songName: result.name,
-          artist: result.artists[0].name,
-          id: result.id
-      })
-    })
-    setSongs(songs);
-  }
 
   //Login to Spotify account and get user data.
 
@@ -255,8 +243,8 @@ function App() {
 
         <div className="search-results">
           <ul>
-            {songs.map((song) => {
-              return <SearchResults result={song} setPlaylistSongs={setPlaylistSongs} key={song.id} generateUniqueId={generateUniqueId} />
+            {results.map((result) => {
+              return <Songs result={result} setPlaylistSongs={setPlaylistSongs} key={result.id} generateUniqueId={generateUniqueId} />
             })}
           </ul>
         </div>
