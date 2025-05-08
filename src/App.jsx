@@ -15,7 +15,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [songs, setSongs] = useState([]);
   const [playlistSongs, setPlaylistSongs] = useState([]);
-  const [title, setTitle] = useState("Playlist Title");
+  const [title, setTitle] = useState("");
   const [accessToken, setAccessToken] = useState(null);
   const [loginAccessToken, setLoginAccessToken] = useState(null);
   const [userData, setUserData] = useState("");
@@ -168,6 +168,63 @@ function App() {
         }
     }
 
+    const createNewPlaylist = async () => {
+      if(!title) {
+        return alert("❌ Please set a title!")
+      }
+      
+      if(!loginAccessToken) {
+        return alert("❌ Please login to Spotify first!")
+      }
+
+      try {
+        const response = await fetch(`https://api.spotify.com/v1/users/${userData.id}/playlists`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${loginAccessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'name': title,
+            'description': 'Playlist made through Jammming',
+            'public': false
+          })
+        });
+
+        if(response.ok) {
+          const jsonResponse = await response.json();
+          return jsonResponse
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const addPlaylistTracks = async (playlist) => {
+      if (!title || !loginAccessToken) return
+
+      try {
+        const requestBody = playlistSongs.map((playlistSong) => `spotify:track:${playlistSong.id}`);
+        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${loginAccessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'uris': requestBody,
+            'position': 0
+          })
+        });
+
+        if(response.ok) {
+          alert("✅ Playlist added to your Spotify account!")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
   return (
     <>
       <header>
@@ -199,14 +256,16 @@ function App() {
         <div className="playlist">
           <ul>
             <li className="title">
-              <input className="playlist-title" onChange={(e) => setTitle(e.target.value)} value ={title}></input>
+              <input className="playlist-title" onChange={(e) => setTitle(e.target.value)} value ={title} placeholder='Your Playlist Title'></input>
             </li>
             {playlistSongs.map((playlistSong) => {
               playlistSong.playlistId = generateUniqueId();
               return <Playlist playlistSong={playlistSong} id={playlistSong.id} setPlaylistSongs={setPlaylistSongs} key={playlistSong.playlistId} />
             })}
             <li className="save">
-              <button>Save to Spotify</button>
+              <button onClick={() => {
+                createNewPlaylist().then((playlist) => addPlaylistTracks(playlist))
+              }}>Save to Spotify</button>
             </li>
           </ul>
         </div>
