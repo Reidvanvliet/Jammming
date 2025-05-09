@@ -22,6 +22,7 @@ function App() {
   const [loginAccessToken, setLoginAccessToken] = useState(null);
   const [userData, setUserData] = useState("");
   const [searchParam, setSearchParam] = useState("track")
+  const [changeRender, setChangeRender] = useState("songs")
   
   let uniqueIdCounter = 0;
 
@@ -74,6 +75,7 @@ function App() {
     let resultArray = [];
     data.map((result) => {
       if(searchParam == "track") {
+        setChangeRender('track')
         resultArray.push({
           src: result.album.images[2].url,
           name: result.name,
@@ -81,6 +83,7 @@ function App() {
           artist: result.artists[0].name
         })
       } else if(searchParam == "artist") {
+          setChangeRender('artist')
           resultArray.push({
             src: result.images[2].url,
             name: result.name,
@@ -88,6 +91,7 @@ function App() {
             artist: ""
           })
       } else if(searchParam == "album") {
+          setChangeRender('album')
           resultArray.push({
             src: result.images[2].url,
             name: result.name,
@@ -251,6 +255,70 @@ function App() {
       }
     }
 
+    //Get album or artist and assign it to song and change the searhParam
+
+    const getAlbum = async (albumId) => {
+      try {
+        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        if(response.ok) {
+          setChangeRender('track');
+          const jsonResponse = await response.json();
+          const result = handleAlbumData(jsonResponse);
+          setResults(result);
+        }
+      } catch (error) {
+      console.log(error);
+        }
+    } 
+
+    const handleAlbumData = (data) => {
+      let array = [];
+      data.tracks.items.map((obj) => {
+        array.push({
+          src: data.images[2].url,
+          name: obj.name,
+          id: obj.id,
+          artist: obj.artists[0].name
+        })
+      })
+      return array;
+    }
+
+    const getArtist = async (artistId) => {
+      try {
+        const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}/top-tracks`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        if (response.ok) {
+          setChangeRender('track')
+          const jsonResponse = await response.json();
+          const result = handleArtistData(jsonResponse);
+          setResults(result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const handleArtistData = (data) => {
+      let array = [];
+      data.tracks.map((obj) => {
+        array.push({
+          src: obj.album.images[2].url,
+          name: obj.name,
+          id: obj.id,
+          artist: obj.artists[0].name
+        })
+      })
+      return array;
+    }
+
     //Render our application
 
   return (
@@ -269,7 +337,7 @@ function App() {
             <div className="search">
               <form>
                 <SearchBar setSearch={setSearch} value={search}/>
-                <SearchParam setSearchParam={setSearchParam}/>
+                <SearchParam setSearchParam={setSearchParam} value={searchParam}/>
               </form>
             </div>
           </div>
@@ -282,7 +350,7 @@ function App() {
           <ul>
             {
               results.map((results) => 
-                <Songs result={results} setPlaylistSongs={setPlaylistSongs} key={results.id} generateUniqueId={generateUniqueId}/>
+                <Songs result={results} setPlaylistSongs={setPlaylistSongs} key={results.id} generateUniqueId={generateUniqueId} getAlbum={getAlbum} getArtist={getArtist} changeRender={changeRender}/>
               )}
           </ul>
         </div>

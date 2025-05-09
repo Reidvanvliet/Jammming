@@ -9,7 +9,7 @@ function Playlist ({playlistSong, setPlaylistSongs}) {
                 <p className='track'>{playlistSong.name}</p>
                 <p className='artist'>{playlistSong.artist}</p>
             </div>
-            <button className="delete" onClick={(e) => setPlaylistSongs((prev) => prev.filter((e) => e.playlistId !== playlistSong.playlistId))}>-</button>
+            <button className="delete" onClick={(e) => setPlaylistSongs((prev) => prev.filter((e) => e.playlistId !== playlistSong.playlistId))}><i className="minus">-</i></button>
         </li>
     )
 }
