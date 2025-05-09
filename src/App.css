@@ -249,7 +249,8 @@ header span {
   }
 
   header h1 {
-    padding-left: 10%;
+    font-size: 2rem;
+    padding-left: 5%;
   }
 
   .login {
@@ -287,6 +288,6 @@ header span {
 
   .save button {
     top: 2050px;
-    width: 30%;
+    width: 50%;
   }
 }
