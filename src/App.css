@@ -80,7 +80,7 @@ header span {
 
 .search-bar{
   height: 40px;
-  width: 400px;
+  width: 100%;
   border-radius: 10px;
   background-color: rgba(240, 248, 255, 0.753);
   border: 2px solid black;
@@ -257,12 +257,11 @@ header span {
   }
 
   .search {
-    margin-left: 5%;
     margin-bottom: 0;
   }
 
   .search-param {
-    margin: 1% 0 0 33%;
+    margin: 1% 0 0 35%;
     width: 30%;
   }
 
