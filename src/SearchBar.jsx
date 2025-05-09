@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
 
-function SearchBar (props) {
+function SearchBar ({setSearch, value}) {
 
 return (
-    <div className="search">
-          <form>
-            <input className="search-bar" type="text" onChange={(e) => props.setSearch(e.target.value)} value={props.value}></input>
-            <input type="submit" hidden/>
-            <select className="search-param" name="params" id="params" defaultValue="song">
-                <option value="song" >Song</option>
-                <option value="genre">Genre</option>
-                <option value="artist">Artist</option>
-                <option value="album">Album</option>
-            </select>
-          </form>
-        </div>
+    <input className="search-bar" type="text" onChange={(e) => setSearch(e.target.value)} value={value}></input>
 )};
 
 export default SearchBar;

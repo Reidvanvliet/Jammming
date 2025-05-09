@@ -4,6 +4,8 @@ import SearchBar from './SearchBar';
 import Songs from './Songs';
 import Playlist from './Playlist';
 import Login from './Login';
+import SearchParam from './SearchParam';
+
 
 const clientId = "2fac4d8b00b74fa7912463fa0d1f5b9f";
 const clientSecret = "da6d7503439f4bd58dcc074700cbf86a";
@@ -19,7 +21,7 @@ function App() {
   const [accessToken, setAccessToken] = useState(null);
   const [loginAccessToken, setLoginAccessToken] = useState(null);
   const [userData, setUserData] = useState("");
-
+  const [searchParam, setSearchParam] = useState("track")
   
   let uniqueIdCounter = 0;
 
@@ -52,19 +54,49 @@ function App() {
 
   const getSearchData = async (accessToken) => {
     try {
-      const response = await fetch(`https://api.spotify.com/v1/search?q=${search}&type=track`, {
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${search}&type=${searchParam}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
       });
       if(response.ok) {
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
-        setResults(jsonResponse.tracks.items);
+        const resultsArray = jsonResponse[searchParam + 's'].items
+        const result = handleData(resultsArray);
+        setResults(result);
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const handleData = (data) => {
+    let resultArray = [];
+    data.map((result) => {
+      if(searchParam == "track") {
+        resultArray.push({
+          src: result.album.images[2].url,
+          name: result.name,
+          id: result.id,
+          artist: result.artists[0].name
+        })
+      } else if(searchParam == "artist") {
+          resultArray.push({
+            src: result.images[2].url,
+            name: result.name,
+            id: result.id,
+            artist: ""
+          })
+      } else if(searchParam == "album") {
+          resultArray.push({
+            src: result.images[2].url,
+            name: result.name,
+            id: result.id,
+            artist: result.artists[0].name
+          })
+        }
+      })     
+    return resultArray;
   }
 
   useEffect(() => {
@@ -78,7 +110,7 @@ function App() {
       getSearchData(accessToken)
     }
   }
-  ,[search]);
+  ,[search, searchParam]);
 
   //Login to Spotify account and get user data.
 
@@ -234,7 +266,12 @@ function App() {
           <h2>Add Your Favorite</h2>
           <h2>Spotify Songs!</h2>
           <div className="search-container">
-            <SearchBar setSearch={setSearch} value={search}/>
+            <div className="search">
+              <form>
+                <SearchBar setSearch={setSearch} value={search}/>
+                <SearchParam setSearchParam={setSearchParam}/>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -243,9 +280,10 @@ function App() {
 
         <div className="search-results">
           <ul>
-            {results.map((result) => {
-              return <Songs result={result} setPlaylistSongs={setPlaylistSongs} key={result.id} generateUniqueId={generateUniqueId} />
-            })}
+            {
+              results.map((results) => 
+                <Songs result={results} setPlaylistSongs={setPlaylistSongs} key={results.id} generateUniqueId={generateUniqueId}/>
+              )}
           </ul>
         </div>
         
