@@ -242,3 +242,48 @@ header span {
 .footer {
   height: 10px;
 }
+
+@media only screen and (max-width: 900px) {
+  header {
+    justify-content: start;
+  }
+
+  header h1 {
+    padding-left: 10%;
+  }
+
+  .login {
+    margin-right: 30px;
+  }
+
+  .search {
+    margin-left: 5%;
+    margin-bottom: 0;
+  }
+
+  .search-param {
+    margin: 1% 0 0 33%;
+    width: 30%;
+  }
+
+  .songs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .search-results {
+    width: 100%;
+    height: 500px;
+  }
+
+  .playlist {
+    width: 100%;
+    height: 500px;
+  }
+
+  .save button {
+    top: 2050px;
+    width: 30%;
+  }
+}
