@@ -1,12 +1,28 @@
-# React + Vite
+# 🎵 Jamming App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## ⚠️ Important Notes  
 
-Currently, two official plugins are available:
+- ✅ **Login to Spotify** works perfectly.  
+- ✅ **Search functionality** works as expected.  
+- ✅ **Adding and removing tracks** in a playlist works.  
+- ✅ **Save to Spotify** works perfectly.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Functionality  
 
-## Expanding the ESLint configuration
+This app allows you to:  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Log in to Spotify** using OAuth authentication.  
+- **Search for tracks** via the Spotify API.  
+- **Select tracks and add them to a playlist.**  
+- **Create a new playlist and add selected tracks.**  
+- **Save the playlist to your Spotify account** (only works for authorized users).  
+
+## 📁 List of Components  
+
+- `App.jsx`  
+- `main.js`  
+- `Login.js`  
+- `Playlist.js`  
+- `SearchBar.js`  
+- `SearchParam.js`  
+- `Songs.js`  
