@@ -4,7 +4,7 @@ function Playlist ({playlistSong, setPlaylistSongs}) {
 
     return (
         <li className='tracks'>
-            <img className="albumCover" src={playlistSong.src}/>
+            <img className="album-cover" src={playlistSong.src}/>
             <div className="song-info">
                 <p className='track'>{playlistSong.name}</p>
                 <p className='artist'>{playlistSong.artist}</p>
