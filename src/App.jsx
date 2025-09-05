@@ -7,8 +7,8 @@ import Login from './Login';
 import SearchParam from './SearchParam';
 
 
-const clientId = "2fac4d8b00b74fa7912463fa0d1f5b9f";
-const clientSecret = "da6d7503439f4bd58dcc074700cbf86a";
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
 const redirectUri = "https://jamming-reidvanvliet.netlify.app"
 const scopes = "playlist-modify-private playlist-modify-public user-read-private"
 
